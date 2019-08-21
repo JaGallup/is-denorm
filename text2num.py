@@ -90,16 +90,21 @@ def text2num(tokens):
 
 def parse_numbers(tokens):
     i = 0
-    new = []
+    entities = []
     while i < len(tokens):
         try:
             num, length = _text2num(tokens[i:])
+            entities.append({
+                "entity": "number",
+                "text": " ".join(tokens[i:i+length+1]),
+                "value": str(num),
+                "start": i,
+                "end": i + length + 1,
+            })
             i += length + 1
-            new.append(str(num))
         except NumberException:
-            new.append(tokens[i])
             i += 1
-    return new
+    return entities
 
 
 def _tokenize(s):
@@ -119,7 +124,8 @@ if __name__ == "__main__":
     assert 18700059 == text2num(t("átján milljónir sjö hundruð þúsund fimmtíu og níu"))
 
     s = "hvað eru þrjú hundruð og þrjátíu sænskar krónur í íslenskum"
+    for entity in parse_numbers(t(s)):
+        s = s.replace(entity["text"], entity["value"])
     sr = "hvað eru 330 sænskar krónur í íslenskum"
-    print(" ".join(parse_numbers(t(s))))
-    assert sr == " ".join(parse_numbers(t(s)))
+    assert sr == s
 
