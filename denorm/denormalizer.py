@@ -1,8 +1,8 @@
-from text2num import NumericalParser
-from text2math import MathParser
-from text2phone import TelephoneParser
+from .text2num import NumericalParser
+from .text2math import MathParser
+from .text2phone import TelephoneParser
 
-from utils import white_space_tokenizer as t
+from .utils import white_space_tokenizer as t
 
 
 pipeline = [

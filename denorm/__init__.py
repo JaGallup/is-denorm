@@ -8,7 +8,7 @@ Basic usage:
 	>>> from denorm import denormalize
 	>>> denormalize("hvað er sjö hundruð og tuttugu deilt með fjórum")
 	"hvað er 720 / 4"
-	
+
 """
 
-from denormalizer import denormalize
+from .denormalizer import denormalize

@@ -1,8 +1,8 @@
 import operator
 import re
 
-from utils import white_space_tokenizer as t
-from parser import Parser
+from .utils import white_space_tokenizer as t
+from .parser import Parser
 
 
 number = re.compile(r"^[0-9]+$")

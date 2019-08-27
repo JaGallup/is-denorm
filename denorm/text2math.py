@@ -1,8 +1,8 @@
 import operator
 import re
 
-from parser import Parser
-from utils import white_space_tokenizer as t
+from .parser import Parser
+from .utils import white_space_tokenizer as t
 
 patterns = [
     #  (keywords, symbol, operator, priority)
