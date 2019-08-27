@@ -1,3 +1,4 @@
+from parser import Parser
 from utils import white_space_tokenizer as t
 
 units = (
@@ -98,34 +99,36 @@ def text2num(tokens):
     num, length = _text2num(tokens)
     return num
 
-def parser(tokens, text=None):
-    if not text:
-        text = " ".join(tokens)
+class NumericalParser(Parser):
+    def parse(self, tokens, text):
+        if not text:
+            text = " ".join(tokens)
 
-    i = 0
-    entities = []
-    new_string = []
-    while i < len(tokens):
-        try:
-            num, length = _text2num(tokens[i:])
-            first, last = tokens[i], tokens[i + length - 1]
-            new_string.append(str(num))
-            entities.append({
-                "entity": "number",
-                "text": " ".join(tokens[i:i+length]),
-                "value": str(num),
-                "start": text.index(first),
-                "end": text.index(last) + len(last),
-            })
-            i += length
-        except NumberException:
-            new_string.append(tokens[i])
-            i += 1
-    return {
-        "text": text,
-        "entities": entities,
-        "parsed_text": " ".join(new_string),
-    }
+        i = 0
+        entities = []
+        new_string = []
+        while i < len(tokens):
+            try:
+                num, length = _text2num(tokens[i:])
+                first, last = tokens[i], tokens[i + length - 1]
+                new_string.append(str(num))
+                entities.append({
+                    "entity": "number",
+                    "text": " ".join(tokens[i:i+length]),
+                    "value": str(num),
+                    "start": text.index(first),
+                    "end": text.index(last) + len(last),
+                })
+                i += length
+            except NumberException:
+                new_string.append(tokens[i])
+                i += 1
+        return " ".join(new_string)
+#        return {
+#            "text": text,
+#            "entities": entities,
+#            "parsed_text": " ".join(new_string),
+#        }
 
 
 if __name__ == "__main__":
@@ -173,11 +176,12 @@ if __name__ == "__main__":
     ]
 
     import pprint
+    parser = NumericalParser()
     for s, target in test_sentences:
         try:
-            resp = parser(t(s))
-            parsed = resp["parsed_text"]
+            parsed = parser.parse(t(s), s)
             assert parsed == target
+            print("Success: ", parsed, "==", target)
         except AssertionError:
             pprint.pprint(resp)
-            print("Failed: ", parsed, "not equal to", target)
+            print("Failed: ", parsed, "!=", target)
